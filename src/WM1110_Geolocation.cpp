@@ -124,9 +124,9 @@ void WM1110_Geolocation::run(void)
     printf("\r\n");
     printf("Region:%s\r\n",region_str[region-1]);
 
-    printf("Scan geolocation Interval(min):%u\r\n",track_period_time/60/1000);
+    printf("Scan geolocation Interval(min):%lu\r\n",track_period_time/60/1000);
 
-    printf("Read sensor data Interval(min):%u\r\n",sensor_period_time/60/1000);
+    printf("Read sensor data Interval(min):%lu\r\n",sensor_period_time/60/1000);
 
     LbmxEngine::begin(lbmWm1110.getRadio(), &WM1110_Geolocation::modemEventHandler);
 
@@ -1675,7 +1675,7 @@ bool WM1110_Geolocation::sendFrame( uint8_t* buffer, uint8_t length, bool tx_con
         uint8_t radio_busy_status;
         if( getLbmxRadioBusyState(&radio_busy_status ) == false)
         {
-            printf( "Request uplink at %u\n", smtc_modem_hal_get_time_in_ms( ));
+            printf( "Request uplink at %lu\n", smtc_modem_hal_get_time_in_ms( ));
             if( emergency )
             {
                 result = smtc_modem_request_emergency_uplink( stack_id, uplink_port, tx_confirmed, buffer, length );
@@ -1912,7 +1912,7 @@ void WM1110_Geolocation::joined(const LbmxEvent& event)
     printf("Send uplink packet to request current time from Cloud.\n");
     if (smtc_modem_time_start_sync_service(0, SMTC_MODEM_TIME_ALC_SYNC) != SMTC_MODEM_RC_OK) abort();
     
-    printf("Start the timer every %ds to check if there are data need to be sent.\n",UPLINK_PERIOD);
+    printf("Start the timer every %lds to check if there are data need to be sent.\n",UPLINK_PERIOD);
     if (LbmxEngine::startAlarm(FIRST_UPLINK_DELAY) != SMTC_MODEM_RC_OK) abort();
 
     printf("Set up the first boot packet after Joined\n");
@@ -1951,7 +1951,7 @@ void WM1110_Geolocation::time(const LbmxEvent& event)
 void WM1110_Geolocation::alarm(const LbmxEvent& event)
 {
     static uint8_t sync_time_interval = 0;
-    printf("----- Timer for %ds -----\n",UPLINK_PERIOD);
+    printf("----- Timer for %lds -----\n",UPLINK_PERIOD);
     if(txProcess())
     {
         sync_time_interval = 0;
